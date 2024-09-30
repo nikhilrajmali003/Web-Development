@@ -1,0 +1,8 @@
+
+#box{
+    height: 150px;
+    width:140px;
+    background-color: lavenderblush;
+    color: rgb(4, 39, 238);
+    border: 2px solid black;
+}

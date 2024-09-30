@@ -1,0 +1,163 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+body{
+    background-color: rgb(0, 0,33);
+    color: white;
+}
+nav{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 70px;
+    background-color: rgb(20, 13, 59);
+}
+nav ul{
+    display: flex;
+    justify-content: center;
+}
+nav ul li{
+    list-style: none;
+    margin: 0 23px;
+}
+nav ul li a{
+ text-decoration: none;
+    color: aliceblue;
+}
+nav ul li a:hover{
+
+    color: rgb(153, 1563, 230);
+    font-size: 1.2rem;
+}
+.left{
+    font-size: 2rem;
+}
+.leftsection.button{
+    padding: 50px;
+}
+.leftsection .btn{
+    padding: 12px;
+    background-color:#1e2167;
+    color:white;
+    border-radius: 6px;
+    border: 2px solid white;
+    font-size: 20px;
+    cursor: pointer;
+
+}
+.firstsection{
+    display: flex;
+    justify-content: space-around;
+    margin: 80px 0;
+    align-items: center;
+}
+.firstsection >div{
+    width: 30%;
+}
+.leftsection{
+    font-size: 3rem;
+}
+.rightsection img{
+   width: 100%;
+   margin: 2px 0;
+}
+.purple{
+    color: rgb(168, 76, 255);
+}
+/* About Section CSS */
+#about{
+    /* background-color: #f0f0f0; */
+    
+    padding: 50px;
+    text-align: center;
+}
+#about h2{
+    font-size: 3rem;
+    
+    margin-top: auto;
+    color: #ffffff;
+}
+#about p{
+    font-size: 2rem;
+    color:#b1a4d4;
+}
+/* Skills Section CSS */
+#skills{
+    padding: 50px;
+    text-align: center;
+}
+#skills h2{
+    font-size: 3rem;
+    color: #ffffff;
+}
+#skills ul{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+#skills li{
+    color: #b1a4d4;
+    padding: 10px;
+  font-size: 2rem;
+}
+#skills li:last-child{
+    border-bottom: none;
+}
+
+/* Contact Section CSS */
+#contact{
+   
+    padding: 50px;
+    text-align: center;
+}
+#contact h2{
+    color:#f7f7f8;
+    font-size: 3rem;
+
+}
+#contact ul{
+  
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+#contact li{
+    font-size: 1.5rem;
+    padding: 10px;
+   
+}
+
+#contact p{
+font-size: 1.5rem;
+}
+
+/* Projects Section CSS */
+#projects{
+    padding: 50px;
+    text-align: center;
+}
+#projects h2{
+    font-size: 3rem;
+    color: #ffffff;
+}
+#projects ul{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+#projects li{
+    padding: 20px;
+    font-size: 1.5rem;
+    
+}
+#projects li:last-child{
+    border-bottom: none;
+}
+#projects h3{
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+#projects p{
+    color:#b1a4d4;
+}

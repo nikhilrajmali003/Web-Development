@@ -1,0 +1,46 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>More on CSS selectors</title>
+    <style>
+      /* .box:first-child{
+    background-color: aqua;
+}
+.box::first-line{
+    color: red;
+} */
+      /* .boxes *{
+    color:blue;
+    border: 2px solid green;
+}
+p,a,.box,[data-color="primary"]
+{
+    padding-top: 45px;
+} */
+      .box:nth-child(even) {
+        background-color: rgb(57, 18, 255);
+      }
+      .boxes::before{
+        content: "nikhil is good"
+      }
+      .boxes::after{
+        content: "nikhil is good"
+      }
+      ::selection{
+        background-color: rgb(103, 228, 31);
+        color: rgb(217, 0, 255);
+      }
+      .box::first-letter{
+        color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="boxes">
+      <div class="box">Hey I am first box</div>
+      <div data-color="primary" ="box">Hey I am box</div>
+      <div class="box">Hey I am box</div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,72 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CCS selector</title>
+    <style>
+      /* Element selector*/
+      div {
+        /* background-color: yellow; */
+      }
+
+      /* Class selector*/
+      .yellow {
+        background-color: yellow;
+      }
+
+      /* ID selector*/
+      #green {
+        background-color: green;
+      }
+
+      /* child  selector*/
+      div > p {
+        color: blue;
+        background-color: orange;
+      }
+
+      /* Descendant selector*/
+      div p {
+        color: blue;
+        background-color: orange;
+      }
+
+      /* Universal selector*/
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      /* pseudo selector*/
+      a:visited {
+        color: rgb(226, 43, 43);
+      }
+
+      a:active {
+        background-color: red;
+      }
+
+      a:link {
+        color: brown;
+      }
+
+      a:hover {
+        background-color: black;
+      }
+
+      p:first-child {
+        background-color: aqua;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="yellow">
+      i am a div
+      <article>
+        <p>I am para inside the div</p>
+      </article>
+    </div>
+    <div id="green">I am another div</div>
+    <div class="one">I am selector</div>
+    <a href="https://www.firefox.com">GOOGLE</a>
+  </body>
+</html>

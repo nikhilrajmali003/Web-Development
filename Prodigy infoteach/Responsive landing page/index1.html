@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coffee Shop</title>
+    <link rel="stylesheet" href="style1.css">
+   
+  </head>
+  <body>
+    <header>
+      <nav class="navbar">
+        <a class="logo" href="#">Coffee<span>.</span></a>
+        <ul class="menu-links">
+          <li><a href="#home">Home</a></li>
+          <li><a href="#products">Products</a></li>
+          <li><a href="#testimonials">Testimonials</a></li>
+          <li><a href="#about">About us</a></li>
+          <li><a href="#contact">Contact us</a></li>
+        </ul>
+        <span id="close-menu-btn" class="material-symbols-outlined">close</span>
+        <span id="hamburger-btn" class="material-symbols-outlined">menu</span>
+      </nav>
+    </header>
+    
+
+    <section id="home" class="hero-section">
+        <div class="content">
+          <h2>Welcome to Our Coffee Shop</h2>
+          <p>
+            We're passionate about serving the best coffee in town. Our expertly trained baristas are dedicated to crafting each cup with care and precision.
+          </p>
+          <button>Learn More</button>
+        </div>
+      </section>
+  
+      <section id="products" class="products-section">
+        <h2>Our Products</h2>
+        <div class="products-grid">
+          <div class="product">
+            <img src="./images/new.png" alt="Coffee Cup">
+            <h3>Coffee Cup</h3>
+            <p>Our signature coffee blend, roasted to perfection.</p>
+          </div>
+          <div class="product">
+            <img src="./images/new.jpg" alt="Espresso">
+            <h3>Espresso</h3>
+            <p>A strong and rich shot of coffee, perfect for a morning boost.</p>
+          </div>
+          <div class="product">
+            <img src="./images/coffeecup.jpg" alt="Latte">
+            <h3>Latte</h3>
+            <p>A velvety-smooth coffee drink, topped with a layer of foam.</p>
+          </div>
+        </div>
+      </section>
+  
+      <section id="testimonials" class="testimonials-section">
+        <h2 >What Our Customers Say</h2>
+        <div class="testimonials-grid">
+          <div class="testimonial">
+            <p>"Best coffee I've ever had! The baristas are so friendly and knowledgeable."</p>
+            <span>- Emily R.</span>
+          </div>
+          <div class="testimonial">
+            <p>"I'm obsessed with their espresso. It's the perfect way to start my day."</p>
+            <span>- David K.</span>
+          </div>
+          <div class="testimonial">
+            <p>"The atmosphere is cozy and inviting. I love coming here to work or meet with friends."</p>
+            <span>- Sarah K.</span>
+          </div>
+        </div>
+      </section>
+  
+      <section id="about" class="about-section">
+        <h2>About Us</h2>
+        <div class="new">
+        <p>
+          Our coffee shop is dedicated to providing a warm and welcoming environment for our customers. We're passionate about serving high-quality coffee and building a strong community.
+        </p>
+        <p>
+          Our team is comprised of experienced baristas and coffee enthusiasts who are dedicated to crafting each cup with care and precision.
+        </p>
+      </section>
+  
+      
+    <script>
+      const header = document.querySelector("header");
+      const hamburgerBtn = document.querySelector("#hamburger-btn");
+      const closeMenuBtn = document.querySelector("#close-menu-btn");
+
+      // Toggle mobile menu on hamburger button click
+      hamburgerBtn.addEventListener("click", () => header.classList.toggle("show-mobile-menu"));
+
+      // Close mobile menu on close button click
+      closeMenuBtn.addEventListener("click", () => hamburgerBtn.click());
+    </script>
+    
+  </body>
+</html>
