@@ -43,6 +43,33 @@ app.get('/files/:filename', function(req, res) {
         res.render('show', { filename: req.params.filename, filedata: filedata });
     });
 });
+app.get('/edit/:filename', function(req, res) {
+    res.render('edit',{filename:req.params.filename});
+ });
+ 
+
+ app.post('/edit', function(req, res) {
+    const oldFileName = req.body.previous;
+    const newFileName = req.body.new;
+
+    // Check if both fields are provided
+    if (!oldFileName || !newFileName) {
+        return res.status(400).send("Both old and new filenames are required.");
+    }
+
+    // Rename the file
+    fs.rename(`./files/${oldFileName}`, `./files/${newFileName}`, function(err) {
+        if (err) {
+            console.error("Error renaming file:", err);
+            return res.status(500).send("Error renaming file.");
+        }
+
+        // Redirect to the homepage after renaming
+        res.redirect('/');
+    });
+});
+
+
 
 app.listen(3000, function() {
     console.log("Server is running on port 3000");

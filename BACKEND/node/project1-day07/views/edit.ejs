@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Filename</title>
+    <link rel="stylesheet" href="/stylesheet/style.css" />
+    <script src="http://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
+    <div class="main w-full min-h-screen bg-zinc-900 flex items-center justify-center">
+      <div class="w-1/2 p-8 bg-zinc-800 rounded-md">
+        <a href="/" class="text-blue-600 inline-block mb-10">Go Back To Home</a>
+        
+        <form action="/edit" method="post">
+          <!-- The previous file name is displayed and sent to the server via a hidden field -->
+          <input
+            type="hidden"
+            name="previous"
+            value="<%= filename %>"
+          />
+          
+          <!-- Display the previous name for the user's reference -->
+          <div class="mb-4 text-white">
+            <label class="block mb-2">Previous File Name:</label>
+            <p class="bg-zinc-800 px-5 py-2 rounded-md text-white"><%= filename %></p>
+          </div>
+          
+          <!-- Input field for the new file name -->
+          <div class="mb-4">
+            <label class="block mb-2 text-white">New File Name:</label>
+            <input
+              type="text"
+              placeholder="Enter new file name"
+              class="block w-full px-5 py-2 bg-zinc-700 text-white rounded-md outline-none"
+              name="new"
+              required
+            />
+          </div>
+
+          <!-- Submit button to update the filename -->
+          <input
+            type="submit"
+            value="Update Name"
+            class="mt-4 bg-yellow-600 text-white px-5 py-2 rounded-md cursor-pointer hover:bg-yellow-500"
+          />
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
