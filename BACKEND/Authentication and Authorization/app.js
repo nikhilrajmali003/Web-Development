@@ -1,29 +1,31 @@
 const express = require('express');
-// const cookieParser = require('cookie-parser'); // Import cookie-parser
-const bcrypt=require('bcrypt');
+const cookieParser = require('cookie-parser'); // Import cookie-parser
+const jwt = require('jsonwebtoken');
+const path = require('path');
+
 const app = express();
 
-// Use cookie-parser middleware
-// app.use(cookieParser());
+// Set the view engine to EJS
+app.set('view engine', 'ejs');
 
-// app.get("/", function (req, res) {
-//     res.cookie("name", "harsh"); // Set the cookie
-//     res.send("Cookie has been set!");
-// });
+// Middleware to parse JSON requests
+app.use(express.json());
 
-// app.get("/read", function (req, res) {
-//     console.log(req.cookies); // read the cookie
-//     res.send("read page");
-// });
+// Middleware to parse URL-encoded data
+app.use(express.urlencoded({ extended: true }));
 
-app.get("/",function(req,res){
-    bcrypt.genSalt(10, function(err, salt) {
-        bcrypt.hash("nikhil0031", salt, function(err, hash) {
-            // Store hash in your password DB.
-            console.log(hash);
-        });
-    });
-})
+// Middleware to serve static files
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Middleware to parse cookies
+app.use(cookieParser());
+
+// Route to render the index page
+app.get("/", function(req, res) {
+    res.render('index'); // Render the 'index' EJS file
+});
+
+// Start the server on port 3000
 app.listen(3000, () => {
     console.log("Server is running on port 3000");
 });
