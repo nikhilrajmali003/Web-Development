@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const userModel = require('./models/user');
-
+const postModel=require('./models/posts')
 const app = express();
 
 // Middleware
@@ -41,12 +41,10 @@ app.post('/register', async (req, res) => {
         });
 
         // Generate JWT token
-        const token = jwt.sign({ email: user.email, userid: user._id }, 'shshhh', {
-            expiresIn: '1h', // Token expiry for better security
-        });
+        const token = jwt.sign({ email:email, userid: user._id }, 'shshhh');
 
         // Set the token in cookies
-        res.cookie('token', token, { httpOnly: true }); // Use httpOnly for better security
+        res.cookie('token', token); 
         res.status(201).send('Registered successfully');
     } catch (error) {
         console.error('Error in /register:', error.message);
