@@ -1,0 +1,16 @@
+/* Global styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; /* Ensures padding and border are included in total width and height */
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+     /* Sets a warm background color */
+     background-color: rgb(27, 26, 26);
+     color: white;
+    font-family: Arial, sans-serif; /* Sets a default font */
+}
+

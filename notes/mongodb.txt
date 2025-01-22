@@ -1,0 +1,10 @@
+Database --> Collections -->document.
+code
+---------------------------------------------------------------------
+
+code         Database
+---------------------------------------------------------------------
+mongoose.connect->database
+Ager model create kr te hai toh -> collection create hota hai
+Create code -->document
+--------------------------------------------------------------
