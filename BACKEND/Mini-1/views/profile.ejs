@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white">
+
+    <div class="min-h-screen flex items-center justify-center p-10">
+        <div class="max-w-md w-full bg-gray-800 rounded-md shadow-md p-8">
+            <h1 class="text-3xl mb-6 text-center">Profile</h1>
+            
+            <!-- User Information -->
+            <div class="space-y-4">
+                <p><strong class="text-blue-500">Name:</strong> <%= user.name %></p>
+                <p><strong class="text-blue-500">Username:</strong> <%= user.username %></p>
+                <p><strong class="text-blue-500">Email:</strong> <%= user.email %></p>
+                <p><strong class="text-blue-500">Age:</strong> <%= user.age %></p>
+            </div>
+
+            <!-- Logout Button -->
+            <div class="mt-6 text-center">
+                <a href="/logout" class="px-6 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition">
+                    Logout
+                </a>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
