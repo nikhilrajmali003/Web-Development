@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white">
+
+    <div class="min-h-screen flex items-center justify-center p-10">
+        <!-- Main Container -->
+        <div class="max-w-2xl w-full bg-gray-800 rounded-md shadow-md p-8">
+            <!-- Header -->
+            <div class="flex justify-between items-center mb-5">
+                <h1 class="text-3xl">
+                    <span class="font-light">Hello</span>, <%= user.name %>
+                </h1>
+                <a href="/logout" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition">
+                    Logout
+                </a>
+            </div>
+
+            <!-- Create Post Form -->
+            <h5 class="text-xl mb-4">Create a New Post</h5>
+            <form action="/post" method="post" class="mb-8">
+                <textarea 
+                    name="postContent"
+                    placeholder="What's on your mind?" 
+                    class="w-full resize-none p-3 bg-gray-900 border-2 border-gray-700 rounded-md focus:border-blue-500 focus:outline-none text-white"
+                    rows="4"
+                    required></textarea>
+                <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition mt-3">
+                    Create Post
+                </button>
+            </form>
+
+            <!-- User's Posts -->
+            <h3 class="text-zinc-400 text-lg mb-4">Your Posts</h3>
+            <div class="space-y-4">
+                <!-- Single Post -->
+                <div class="post p-5 border-2 border-zinc-700 rounded-md">
+                    <h4 class="text-blue-500 text-lg mb-2">Post Title Here</h4>
+                    <p class="text-sm text-gray-300">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum sint aut, delectus dolores non quam totam voluptas impedit quae placeat perferendis eos asperiores distinctio.
+                    </p>
+                    <div class="flex gap-4 mt-4">
+                        <a href="#" class="text-blue-500 hover:underline">Like</a>
+                        <a href="#" class="text-zinc-400 hover:underline">Comment</a>
+                    </div>
+                </div>
+                <!-- Add more posts dynamically here -->
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

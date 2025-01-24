@@ -13,6 +13,7 @@ app.get("/", (req, res) => {
     res.render("index"); // Render the 'index.ejs' view
 });
 
+
 // Route to read users
 app.get("/read", async (req, res) => {
     try {
@@ -23,6 +24,7 @@ app.get("/read", async (req, res) => {
         res.status(500).send("Server Error"); // Send a 500 error for server issues
     }
 });
+
 
 // Route to create a new user
 app.post("/create", async (req, res) => {
