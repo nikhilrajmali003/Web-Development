@@ -34,22 +34,21 @@
                     Create Post
                 </button>
             </form>
+            
 
             <!-- User's Posts -->
             <h3 class="text-zinc-400 text-lg mb-4">Your Posts</h3>
             <div class="space-y-4">
-                <!-- Single Post -->
-                <div class="post p-5 border-2 border-zinc-700 rounded-md">
-                    <h4 class="text-blue-500 text-lg mb-2">Post Title Here</h4>
-                    <p class="text-sm text-gray-300">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum sint aut, delectus dolores non quam totam voluptas impedit quae placeat perferendis eos asperiores distinctio.
-                    </p>
-                    <div class="flex gap-4 mt-4">
-                        <a href="#" class="text-blue-500 hover:underline">Like</a>
-                        <a href="#" class="text-zinc-400 hover:underline">Comment</a>
-                    </div>
-                </div>
-                <!-- Add more posts dynamically here -->
+                <% if (posts && posts.length > 0) { %>
+                    <% posts.forEach(post => { %>
+                        <div class="post p-5 border-2 border-zinc-700 rounded-md">
+                            <h4 class="text-blue-500 text-lg mb-2"><%= post.username %>'s Post</h4>
+                            <p class="text-sm text-gray-300"><%= post.content %></p>
+                        </div>
+                    <% }) %>
+                <% } else { %>
+                    <p class="text-gray-500">You have not created any posts yet.</p>
+                <% } %>
             </div>
         </div>
     </div>
