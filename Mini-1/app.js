@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 const crypto = require("crypto"); // For generating reset tokens
 const userModel = require("./models/user");
-const Post = require("./models/posts"); // Assuming you have a Post model
+const Post = require("./models/post"); // Assuming you have a Post model
 const session = require('express-session');
 const nodemailer = require('nodemailer');
 
@@ -31,67 +31,46 @@ app.get("/", (req, res) => res.send("Hi!"));
 app.get("/create", (req, res) => res.render("index"));
 app.get("/login", (req, res) => res.render("login"));
 app.get("/profile", isLoggedIn, async (req, res) => {
-    try {
-        const user = req.user; // Get logged-in user data from the middleware
-
-        // Make sure user object is passed to the view
-        if (!user) {
-            return res.redirect("/login");
-        }
-
-        // Fetch posts for this user
-        const posts = await Post.find({ userId: user._id }); // Use _id instead of userid
-
-        res.render("profile", { user, posts }); // Pass user object and posts to the view
-    } catch (err) {
-        console.error(err);
-        res.redirect("/login");
-    }
+    const user = await userModel.findOne({ email: req.user.email }).populate("posts");
+    res.render("profile",{user})
+        
+    
 });
 
 // Post creation
-app.post("/post", async (req, res) => {
-    try {
-        const { postContent } = req.body;  // This will get the post content from the form
-        if (!postContent) {
-            return res.status(400).send("Post content is required");
-        }
+app.post("/post", isLoggedIn, async (req, res) => {
+    let user = await userModel.findOne({ email: req.user.email });  // ✅ Fix: Correct variable name
+    let { content } = req.body;
 
-        // Ensure that the user is authenticated
-        if (!req.user) {
-            return res.status(401).send("User not authenticated");
-        }
+    let post = await Post.create({
+        userId: user._id,  // ✅ Fix: Ensure it matches Post schema
+        username: user.username,  // ✅ Include username
+        content
+    });
 
-        const userId = req.user._id;  // This assumes you have JWT-based authentication
+    user.posts.push(post._id);  // ✅ Fix: Use 'posts' (plural)
+    await user.save();
 
-        // If there's no content, return a message
-        if (!postContent.trim()) {
-            return res.status(400).send("Post content cannot be empty");
-        }
-
-        // Create a new Post document
-        const newPost = new Post({
-            content: postContent,
-            userId: userId,
-            username: req.user.name  // The user's name from JWT (ensure it's available)
-        });
-
-        // Save the new post to the database
-        await newPost.save();
-
-        // Redirect back to the profile page
-        res.redirect("/profile");
-    } catch (err) {
-        console.error("Error creating post:", err);
-        res.status(500).send("Error creating post");
-    }
+    res.redirect("/profile");
 });
+app.get("/like/:id",isLoggedIn,async(req,res)=>{
+    let post=await postModel.findOne({_id:req.params.id}).populate("user");
+    if(post.likes.indecOf(req.user.userid)==-1){
+        post(.like.push(req.user.user.id  );
 
+    }
+    else{
+        post.likes.splice(post.likes.indexOf(req.user.userid),1);
+    }
+    await post.save()
+    res.redirect("/profile",{user});
+})
 // ✅ Logout (Properly clears the token)
 app.get("/logout", (req, res) => {
     res.clearCookie("token");
     res.redirect("/login");
 });
+app
 
 // ✅ Register Route
 app.post("/register", async (req, res) => {
@@ -265,4 +244,4 @@ app.post("/reset-password/:token", async (req, res) => {
 });
 
 // Start server
-app.listen(3000, () => console.log("Server running on port 3000"));
+app.listen(3001, () => console.log("Server running on port 3001"));
