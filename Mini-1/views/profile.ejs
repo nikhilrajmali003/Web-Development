@@ -14,7 +14,7 @@
             <!-- Header -->
             <div class="flex justify-between items-center mb-6">
                 <h1 class="text-3xl">
-                    <span class="font-light">Hello</span>, <span class="font-semibold">{user.name}</span>
+                    <span class="font-light">Hello</span>, <span class="font-semibold"><%= user.name %></span>
                 </h1>
                 <a href="/logout" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition">
                     Logout
@@ -25,11 +25,11 @@
             <h5 class="text-xl mb-4">Create a New Post</h5>
             <form action="/post" method="post" class="mb-8">
                 <textarea 
-                    name="postContent"
+                    name="content"
                     placeholder="What's on your mind?" 
                     class="w-full resize-none p-3 bg-gray-900 border border-gray-700 rounded-md focus:border-blue-500 focus:outline-none text-white"
                     rows="4"
-                    required name="content"></textarea>
+                    required></textarea>
                 <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition mt-3">
                     Create Post
                 </button>
@@ -39,18 +39,19 @@
             <div class="mt-12">
                 <h3 class="text-zinc-400 text-lg mb-4">Your Posts</h3>
                 <div class="postcontainer space-y-4">
-                   <%= user.post.reverse().forEach(function(post){%>
-                    <div class="post w-full p-4 bg-gray-900 rounded-md border border-zinc-700 hover:bg-gray-800 transition">
-                        <h4 class="text-blue-500 mb-2">@user.username</h4>
-                        <p class="text-sm tracking-tight">
-                            post.content
-                        </p>
-                        <div class="btns flex gap-4 mt-4">
-                            <a class="text-blue-400 hover:underline cursor-pointer " href="/like/<%= post._id %>">Like  </a>
-                            <a class="text-gray-400 hover:underline cursor-pointer">Edit</a>
+                    <!-- Loop through posts -->
+                    <% user.posts.reverse().forEach(function(post) { %>
+                        <div class="post w-full p-4 bg-gray-900 rounded-md border border-zinc-700 hover:bg-gray-800 transition">
+                            <h4 class="text-blue-500 mb-2">@<%= post.username %></h4>
+                            <p class="text-sm tracking-tight">
+                                <%= post.content %>
+                            </p>
+                            <div class="btns flex gap-4 mt-4">
+                                <a class="text-blue-400 hover:underline cursor-pointer" href="/like/<%= post._id %>">Like</a>
+                                <a class="text-gray-400 hover:underline cursor-pointer">Edit</a>
+                            </div>
                         </div>
-                    </div>
-                   <%}); %>
+                    <% }); %>
                 </div>
             </div>
         </div>

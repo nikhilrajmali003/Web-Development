@@ -8,18 +8,16 @@ const Post = require("./models/post"); // Assuming you have a Post model
 const session = require('express-session');
 const nodemailer = require('nodemailer');
 
-
 const JWT_SECRET = process.env.JWT_SECRET || "fallbackSecret";
 
 const app = express();
 
 app.use(session({
-    secret: 'your-secret-key',
+    secret: process.env.SESSION_SECRET || 'your-secret-key', // Make sure to store this in env
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false }  // Change to true for production with HTTPS
+    cookie: { secure: process.env.NODE_ENV === 'production' }  // true for production with HTTPS
 }));
-
 
 app.set("view engine", "ejs");
 app.use(express.json());
@@ -31,48 +29,72 @@ app.get("/", (req, res) => res.send("Hi!"));
 app.get("/create", (req, res) => res.render("index"));
 app.get("/login", (req, res) => res.render("login"));
 app.get("/profile", isLoggedIn, async (req, res) => {
-    const user = await userModel.findOne({ email: req.user.email }).populate("posts");
-    res.render("profile",{user})
-        
-    
+    try {
+        const user = await userModel.findOne({ email: req.user.email }).populate("posts");
+        if (!user) {
+            return res.status(404).send("User not found");
+        }
+        res.render("profile", { user });
+    } catch (err) {
+        log("Error fetching user profile", err); // Using a logger
+        res.status(500).send("Something went wrong");
+    }
 });
 
 // Post creation
 app.post("/post", isLoggedIn, async (req, res) => {
-    let user = await userModel.findOne({ email: req.user.email });  // ✅ Fix: Correct variable name
-    let { content } = req.body;
+    try {
+        let user = await userModel.findOne({ email: req.user.email });
+        let { content } = req.body;
 
-    let post = await Post.create({
-        userId: user._id,  // ✅ Fix: Ensure it matches Post schema
-        username: user.username,  // ✅ Include username
-        content
-    });
+        let post = await Post.create({
+            userId: user._id, 
+            username: user.username, 
+            content
+        });
 
-    user.posts.push(post._id);  // ✅ Fix: Use 'posts' (plural)
-    await user.save();
+        user.posts.push(post._id);
+        await user.save();
 
-    res.redirect("/profile");
+        res.redirect("/profile");
+    } catch (err) {
+        log("Error creating post", err);
+        res.status(500).send("Failed to create post");
+    }
 });
-app.get("/like/:id",isLoggedIn,async(req,res)=>{
-    let post=await postModel.findOne({_id:req.params.id}).populate("user");
-    if(post.likes.indecOf(req.user.userid)==-1){
-        post(.like.push(req.user.user.id  );
 
+// Like/Unlike a post
+app.get("/like/:id", isLoggedIn, async (req, res) => {
+    try {
+        let post = await Post.findOne({ _id: req.params.id }).populate("userId");
+
+        if (!post) {
+            return res.status(404).send("Post not found");
+        }
+
+        // Check if the user has already liked the post
+        if (post.likes.indexOf(req.user.userid) === -1) {
+            post.likes.push(req.user.userid); // Add like
+        } else {
+            post.likes.splice(post.likes.indexOf(req.user.userid), 1); // Remove like
+        }
+
+        await post.save();
+        res.redirect("/profile");
+    } catch (err) {
+        console.error("Error while liking/unliking post", err);
+        res.status(500).send("Something went wrong. Please try again.");
     }
-    else{
-        post.likes.splice(post.likes.indexOf(req.user.userid),1);
-    }
-    await post.save()
-    res.redirect("/profile",{user});
-})
-// ✅ Logout (Properly clears the token)
+});
+
+
+// Logout
 app.get("/logout", (req, res) => {
     res.clearCookie("token");
     res.redirect("/login");
 });
-app
 
-// ✅ Register Route
+// Register Route
 app.post("/register", async (req, res) => {
     try {
         const { email, password, username, name, age } = req.body;
@@ -85,17 +107,17 @@ app.post("/register", async (req, res) => {
 
         let newUser = await userModel.create({ username, email, age, name, password: hashedPassword });
 
-        let token = jwt.sign({ email: user.email, userid: user._id }, JWT_SECRET, { expiresIn: "1h" });
+        let token = jwt.sign({ email: newUser.email, userid: newUser._id }, JWT_SECRET, { expiresIn: "1h" });
 
         res.cookie("token", token, { httpOnly: true });
         res.send("Registered successfully");
     } catch (err) {
-        console.error(err);
+        log("Error during registration", err);
         res.status(500).send("Error during registration");
     }
 });
 
-// ✅ Login Route
+// Login Route
 app.post("/login", async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -115,17 +137,17 @@ app.post("/login", async (req, res) => {
         res.cookie("token", token, { httpOnly: true });
         res.status(200).redirect("/profile");
     } catch (err) {
-        console.error("Error during login:", err);
+        log("Error during login", err);
         res.status(500).send("Login failed, please try again.");
     }
 });
 
-// ✅ Middleware: Check if user is logged in
+// Middleware: Check if user is logged in
 function isLoggedIn(req, res, next) {
     const token = req.cookies.token;
 
     if (!token) {
-        console.log("No token found in cookies");
+        log("No token found in cookies");
         return res.status(401).send("Unauthorized: No token provided");
     }
 
@@ -134,18 +156,17 @@ function isLoggedIn(req, res, next) {
         req.user = decoded;  // Attach the decoded user data to the request
         next();
     } catch (error) {
-        console.error("JWT Verification Error:", error);
+        log("JWT Verification Error:", error);
         return res.status(401).send("Unauthorized: Invalid token");
     }
 }
 
-
-// ✅ Forgot Password - Show Form
+// Forgot Password - Show Form
 app.get("/forgot-password", (req, res) => {
     res.render("forgot-password", { errorMessage: null });
 });
 
-// ✅ Process Forgot Password Request
+// Process Forgot Password Request
 app.post("/forgot-password", async (req, res) => {
     try {
         const { email } = req.body;
@@ -155,16 +176,13 @@ app.post("/forgot-password", async (req, res) => {
             return res.render("forgot-password", { errorMessage: "User not found" });
         }
 
-        // Generate reset token (unhashed for email, hashed for database)
         const resetToken = crypto.randomBytes(32).toString("hex");
         const hashedToken = await bcrypt.hash(resetToken, 10);
 
-        // Save token with expiration (1 hour)
         user.resetPasswordToken = hashedToken;
         user.resetPasswordExpires = Date.now() + 3600000;
         await user.save();
 
-        // Send reset password email
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
@@ -191,11 +209,10 @@ app.post("/forgot-password", async (req, res) => {
     }
 });
 
-// ✅ Show Reset Password Form
+// Show Reset Password Form
 app.get("/reset-password/:token", async (req, res) => {
     const { token } = req.params;
 
-    // Find the user with valid reset token and not expired
     const user = await userModel.findOne({
         resetPasswordToken: { $exists: true },
         resetPasswordExpires: { $gt: Date.now() }
@@ -208,13 +225,12 @@ app.get("/reset-password/:token", async (req, res) => {
     res.render("reset-password", { token, errorMessage: null });
 });
 
-// ✅ Process Reset Password
+// Process Reset Password
 app.post("/reset-password/:token", async (req, res) => {
     try {
         const { password } = req.body;
         const { token } = req.params;
 
-        // Find the user with a valid reset token
         const user = await userModel.findOne({
             resetPasswordToken: { $exists: true },
             resetPasswordExpires: { $gt: Date.now() }
@@ -224,14 +240,10 @@ app.post("/reset-password/:token", async (req, res) => {
             return res.render("reset-password", { token, errorMessage: "Invalid or expired token" });
         }
 
-        // Compare token
         const isMatch = await bcrypt.compare(token, user.resetPasswordToken);
         if (!isMatch) return res.render("reset-password", { token, errorMessage: "Invalid token" });
 
-        // Hash the new password
         user.password = await bcrypt.hash(password, 10);
-
-        // Remove token fields from the user
         user.resetPasswordToken = undefined;
         user.resetPasswordExpires = undefined;
         await user.save();
@@ -245,3 +257,4 @@ app.post("/reset-password/:token", async (req, res) => {
 
 // Start server
 app.listen(3001, () => console.log("Server running on port 3001"));
+
