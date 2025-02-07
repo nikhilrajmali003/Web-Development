@@ -64,28 +64,44 @@ app.post("/post", isLoggedIn, async (req, res) => {
 });
 
 // Like/Unlike a post
-app.get("/like/:id", isLoggedIn, async (req, res) => {
+app.post('/like/:id', isLoggedIn, async (req, res) => {
     try {
-        let post = await Post.findOne({ _id: req.params.id }).populate("userId");
+        const postId = req.params.id;
+        const userId = req.user.userid; // Extract user ID from token
 
+        const post = await Post.findById(postId);
         if (!post) {
-            return res.status(404).send("Post not found");
+            return res.status(404).json({ success: false, message: "Post not found" });
         }
 
         // Check if the user has already liked the post
-        if (post.likes.indexOf(req.user.userid) === -1) {
-            post.likes.push(req.user.userid); // Add like
+        const hasLiked = post.likes.includes(userId);
+
+        if (hasLiked) {
+            // Unlike post
+            await Post.findByIdAndUpdate(postId, { $pull: { likes: userId } });
         } else {
-            post.likes.splice(post.likes.indexOf(req.user.userid), 1); // Remove like
+            // Like post
+            await Post.findByIdAndUpdate(postId, { $addToSet: { likes: userId } });
         }
 
-        await post.save();
-        res.redirect("/profile");
-    } catch (err) {
-        console.error("Error while liking/unliking post", err);
-        res.status(500).send("Something went wrong. Please try again.");
+        // Fetch updated post
+        const updatedPost = await Post.findById(postId);
+
+        res.json({
+            success: true,
+            likesCount: updatedPost.likes.length,
+            likedBy: updatedPost.likes, // Send the updated list of likes
+        });
+
+    } catch (error) {
+        console.error("Error in liking post:", error);
+        res.status(500).json({ success: false, message: "Server error" });
     }
 });
+
+
+
 
 
 // Logout
@@ -141,6 +157,33 @@ app.post("/login", async (req, res) => {
         res.status(500).send("Login failed, please try again.");
     }
 });
+app.post("/edit/:id", isLoggedIn, async (req, res) => {
+    try {
+        const { content } = req.body;
+        const postId = req.params.id;
+
+        let post = await Post.findById(postId);
+        if (!post) {
+            return res.status(404).send("Post not found");
+        }
+
+        // Ensure the logged-in user owns the post
+        if (post.userId.toString() !== req.user.userid) {
+            return res.status(403).send("Unauthorized: You cannot edit this post");
+        }
+
+        // Update post content
+        post.content = content;
+        await post.save();
+
+        res.redirect("/profile"); // Redirect back to the profile page
+    } catch (err) {
+        console.error("Error updating post:", err);
+        res.status(500).send("Something went wrong");
+    }
+});
+
+
 
 // Middleware: Check if user is logged in
 function isLoggedIn(req, res, next) {
