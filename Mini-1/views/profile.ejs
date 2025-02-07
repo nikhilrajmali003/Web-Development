@@ -39,22 +39,66 @@
             <div class="mt-12">
                 <h3 class="text-zinc-400 text-lg mb-4">Your Posts</h3>
                 <div class="postcontainer space-y-4">
-                    <!-- Loop through posts -->
-                    <% user.posts.reverse().forEach(function(post) { %>
-                        <div class="post w-full p-4 bg-gray-900 rounded-md border border-zinc-700 hover:bg-gray-800 transition">
-                            <h4 class="text-blue-500 mb-2">@<%= post.username %></h4>
-                            <p class="text-sm tracking-tight">
-                                <%= post.content %>
-                            </p>
-                            <div class="btns flex gap-4 mt-4">
-                                <a class="text-blue-400 hover:underline cursor-pointer" href="/like/<%= post._id %>">Like</a>
-                                <a class="text-gray-400 hover:underline cursor-pointer">Edit</a>
+                    <% if (user.posts.length === 0) { %>
+                        <p class="text-gray-500">No posts yet.</p>
+                    <% } else { %>
+                        <% user.posts.reverse().forEach(function(post) { %>
+                            <div class="post w-full p-4 bg-gray-900 rounded-md border border-zinc-700 hover:bg-gray-800 transition" id="post-<%= post._id %>">
+                                <h4 class="text-blue-500 mb-2">@<%= post.username %></h4>
+                                <p class="text-sm tracking-tight"><%= post.content %></p>
+
+                                <!-- Like Count -->
+                                <small class="mt-2 inline-block" id="like-count-<%= post._id %>">
+                                    <%= post.likes.length %> <%= post.likes.length === 1 ? "Like" : "Likes" %>
+                                </small>
+
+                                <!-- Like/Unlike Button -->
+                                <div class="btns flex gap-4 mt-4">
+                                    <button class="like-btn text-blue-400 hover:underline cursor-pointer"
+                                            data-post-id="<%= post._id %>"
+                                            data-liked="<%= post.likes.includes(user._id) %>">
+                                        <%= post.likes.includes(user._id) ? "Unlike" : "Like" %>
+                                    </button>
+                                    <a class="text-gray-400 hover:underline cursor-pointer" href="/edit/<%= post._id %>">Edit</a>
+                                </div>
                             </div>
-                        </div>
-                    <% }); %>
+                        <% }); %>
+                    <% } %>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- JavaScript for Like/Unlike -->
+    <script>
+        document.querySelectorAll('.like-btn').forEach(button => {
+            button.addEventListener('click', async function() {
+                const postId = this.getAttribute('data-post-id');
+    
+                try {
+                    const response = await fetch(`/like/${postId}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+    
+                    const data = await response.json();
+                    if (data.success) {
+                        const likeCountElement = document.getElementById(`like-count-${postId}`);
+                        
+                        // Update Like Count
+                        likeCountElement.textContent = `${data.likesCount} ${data.likesCount === 1 ? "Like" : "Likes"}`;
+    
+                        // Update Button Text & Attribute (Fixing Issue!)
+                        this.textContent = data.liked ? "Unlike" : "Like";
+                        this.setAttribute('data-liked', data.liked.toString());
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            });
+        });
+    </script>
+    
+
 </body>
 </html>
