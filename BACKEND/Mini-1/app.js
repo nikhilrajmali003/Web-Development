@@ -7,6 +7,8 @@ const userModel = require("./models/user");
 const Post = require("./models/post"); // Assuming you have a Post model
 const session = require('express-session');
 const nodemailer = require('nodemailer');
+;
+
 
 const JWT_SECRET = process.env.JWT_SECRET || "fallbackSecret";
 
@@ -23,9 +25,13 @@ app.set("view engine", "ejs");
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.get("/register", (req, res) => {
+    res.render("index"); // Serve the index.ejs file
+});
+;
 
 // Routes
-app.get("/", (req, res) => res.send("Hi!"));
+app.get("/", (req, res) => res.render("Home"));
 app.get("/create", (req, res) => res.render("index"));
 app.get("/login", (req, res) => res.render("login"));
 app.get("/profile", isLoggedIn, async (req, res) => {
@@ -182,6 +188,29 @@ app.post("/edit/:id", isLoggedIn, async (req, res) => {
         res.status(500).send("Something went wrong");
     }
 });
+
+app.get("/edit/:id", isLoggedIn, async (req, res) => {
+    try {
+        const postId = req.params.id;
+        const post = await Post.findById(postId);
+
+        if (!post) {
+            return res.status(404).send("Post not found");
+        }
+
+        // Ensure only the owner can edit the post
+        if (post.userId.toString() !== req.user.userid) {
+            return res.status(403).send("Unauthorized: You cannot edit this post");
+        }
+
+        res.render("edit", { post, user: req.user }); // Pass `post` and `user` to the template
+    } catch (err) {
+        console.error("Error fetching post:", err);
+        res.status(500).send("Something went wrong");
+    }
+});
+
+
 
 
 
