@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home | MyApp</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white" style="background: url('https://source.unsplash.com/1600x900/?nature,abstract') no-repeat center center/cover;">
+
+    <!-- Navbar -->
+    <nav class="bg-gray-900 bg-opacity-80 fixed w-full top-0 left-0 shadow-md p-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <a href="/" class="text-2xl font-bold text-white">MyApp</a>
+            <div class="space-x-4">
+                <a href="/" class="text-gray-300 hover:text-white transition">Home</a>
+                <a href="/login" class="text-gray-300 hover:text-white transition">Login</a>
+                <a href="/register" class="text-gray-300 hover:text-white transition">Register</a>
+                <a href="/profile" class="text-gray-300 hover:text-white transition">Profile</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="min-h-screen flex flex-col items-center justify-center text-center px-4">
+        <h1 class="text-5xl font-extrabold text-blue-500 drop-shadow-lg mb-6">Welcome to MyApp</h1>
+        <p class="text-lg text-blue-300 mb-6 max-w-xl">A simple social media platform to share your thoughts and connect with people.</p>
+        
+        <div class="flex gap-4">
+            <a href="/register" class="px-6 py-3 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition shadow-lg">
+                Get Started
+            </a>
+            <a href="/login" class="px-6 py-3 bg-gray-700 text-white rounded-md hover:bg-gray-600 transition shadow-lg">
+                Login
+            </a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 bg-opacity-80 text-gray-300 text-center py-4 fixed bottom-0 w-full">
+        <p>&copy; <span id="year"></span> MyApp. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.getElementById("year").innerText = new Date().getFullYear();
+    </script>
+
+</body>
+</html>
